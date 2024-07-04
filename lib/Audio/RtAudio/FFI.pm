@@ -117,11 +117,8 @@ BEGIN {
             rtaudio_t rtaudio_stream_parameters_t* rtaudio_stream_parameters_t*
             rtaudio_format_t uint uint* rtaudio_cb_t opaque
             rtaudio_stream_options_t* rtaudio_error_cb_t
-        /] => 'rtaudio_error_t' ],
-
-
+        /] => 'rtaudio_error_t', \&_open_stream ],
     };
-
 }
 
 use constant $constants;
@@ -213,4 +210,18 @@ our %EXPORT_TAGS     = (
     enums => \@export_enums,
 );
 
+sub _open_stream {
+    my ( $cb_handler, $rtaudio, $out_params, $in_params, $format, $samplerate, $pbufsize, $cb, $userdata, $stream_opts, $errcb ) = @_;
+    $errcb //= sub { warn "Error $_[0] : $_[1]" };
+    my $callback = sub {
+        my ( $out, $in, $nframes, $stream_time, $stream_status ) = @_;
+        $cb->( $out, $in, $nframes, $stream_time, $stream_status, $userdata );
+    };
+    my $closure = $ffi->closure( $callback );
+    my $errclosure = $ffi->closure( $errcb );
+    $cb_handler->( $rtaudio, $out_params, $in_params, $format, $samplerate, $pbufsize, $closure, undef, $stream_opts, $errclosure );
+}
+
 'My son is also named Bort';
+
+__END__

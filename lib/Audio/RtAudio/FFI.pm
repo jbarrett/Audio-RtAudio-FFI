@@ -95,6 +95,9 @@ BEGIN {
         rtaudio_current_api               => [ [qw/ rtaudio_t /]        => 'rtaudio_api_t' ],
         rtaudio_device_count              => [ [qw/ rtaudio_t /]        => 'int' ],
         rtaudio_get_device_id             => [ [qw/ rtaudio_t int /]    => 'uint' ],
+        # On Windows:
+        # "returning record values is not supported by some combination of your libffi/compiler/platypus"
+        # TODO: Maybe we can return an opaque and cast?
         rtaudio_get_device_info           => [ [qw/ rtaudio_t uint /]   => 'rtaudio_device_info_t' ],
         rtaudio_get_default_output_device => [ [qw/ rtaudio_t /]        => 'uint' ],
         rtaudio_get_default_input_device  => [ [qw/ rtaudio_t /]        => 'uint' ],

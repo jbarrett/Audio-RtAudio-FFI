@@ -210,6 +210,7 @@ our %EXPORT_TAGS     = (
     enums => \@export_enums,
 );
 
+my @closures;
 sub _open_stream {
     my ( $cb_handler, $rtaudio, $out_params, $in_params, $format, $samplerate, $pbufsize, $cb, $userdata, $stream_opts, $errcb ) = @_;
     $errcb //= sub { warn "Error $_[0] : $_[1]" };
@@ -219,6 +220,7 @@ sub _open_stream {
     };
     my $closure = $ffi->closure( $callback );
     my $errclosure = $ffi->closure( $errcb );
+    push @closures, ( $closure, $errclosure );
     $cb_handler->( $rtaudio, $out_params, $in_params, $format, $samplerate, $pbufsize, $closure, undef, $stream_opts, $errclosure );
 }
 

@@ -30,7 +30,7 @@ my $t = 0;
 sub lfo( $out, $in, $nframes, $stream_time, $stream_status, $userdata ) {
     my $buf;
     for my $frame ( 1..$nframes ) {
-        $buf .= pack 'f', ( sin( pi2 * $t ) / 2 ) + 0.5;
+        $buf .= pack 'f', sin( pi2 * $t );
         $t += $slice;
     }
     my( $ptr, $size ) = scalar_to_buffer $buf;
